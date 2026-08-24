@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chúc Mừng Sinh Nhật Cậu! 🎉</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for perfect Vietnamese typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti & html2canvas for Polaroid Download -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: #0f0f11;
+      color: #f3f4f6;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-serif-custom {
+      font-family: 'Lora', serif;
+    }
+
+    .font-handwriting {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    /* Transition & Animations */
+    .screen {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out, transform 0.6s ease-out;
+      transform: translateY(12px);
+    }
+
+    .screen.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Light Switch 3D Button */
+    .switch-btn {
+      background: linear-gradient(145deg, #2a2a32, #18181f);
+      box-shadow: 6px 6px 16px #0a0a0d, -6px -6px 16px #24242e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s ease;
+    }
+    .switch-btn:active {
+      box-shadow: inset 4px 4px 10px #0a0a0d, inset -4px -4px 10px #24242e;
+      transform: scale(0.98);
+    }
+
+    /* Candle Flame Flickering */
+    .flame {
+      width: 14px;
+      height: 22px;
+      background: radial-gradient(ellipse at bottom, #fff 15%, #ffb703 45%, #e63946 90%);
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 12px #ffb703, 0 0 24px #fb8500, 0 0 36px #e63946;
+      animation: flicker 0.15s infinite alternate ease-in-out;
+      transform-origin: center bottom;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); opacity: 0.95; }
+      100% { transform: scale(1.12) rotate(2deg); opacity: 1; }
+    }
+
+    /* Smoke animation when extinguished */
+    .smoke {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(200, 200, 200, 0.6);
+      border-radius: 50%;
+      animation: smokeRise 1.2s forwards ease-out;
+    }
+
+    @keyframes smokeRise {
+      0% { opacity: 0.8; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-35px) scale(3); filter: blur(3px); }
+    }
+
+    /* Paper Scroll Animation */
+    .scroll-paper {
+      background: #fdfbf7;
+      background-image: radial-gradient(#e5e0d8 1px, transparent 0);
+      background-size: 16px 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 40px rgba(210,195,175,0.3);
+    }
+
+    /* Glowing Heart Hold Effect */
+    .heart-glow {
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.6), 0 0 50px rgba(244, 63, 94, 0.3);
+    }
+
+    .pulse-ring {
+      border: 2px solid rgba(244, 63, 94, 0.4);
+      animation: ringExpand 2s infinite ease-out;
+    }
+
+    @keyframes ringExpand {
+      0% { transform: scale(0.9); opacity: 0.9; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    /* Mosaic Number Photo Tile */
+    .mosaic-num {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      width: 140px;
+    }
+    .mosaic-tile {
+      aspect-ratio: 1;
+      background-size: cover;
+      background-position: center;
+      border-radius: 2px;
+    }
+
+    /* Floating Petals/Hearts background */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4 bg-neutral-950">
+
+  <!-- Main Phone Frame Mockup -->
+  <div id="app-container" class="relative w-full max-w-md h-[100vh] sm:h-[880px] bg-neutral-900 sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col justify-between border border-neutral-800">
+    
+    <!-- Floating Music Control -->
+    <div class="absolute top-4 right-4 z-50 flex items-center gap-2">
+      <button id="music-btn" onclick="toggleMusic()" class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white/80 flex items-center justify-center hover:bg-black/60 transition active:scale-95 border border-white/10">
+        <i id="music-icon" class="fas fa-music text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Background Particle Canvas -->
+    <div id="particle-container" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- SCREEN 1: BẬT ĐÈN (Dark Room) -->
+    <div id="screen-1" class="screen active flex-col items-center justify-center h-full px-6 text-center z-10">
+      <div class="space-y-8 my-auto">
+        <p class="text-neutral-400 font-serif-custom italic text-lg tracking-wide animate-pulse">
+          ở đây tối quá...
+        </p>
+
+        <button onclick="goToScreen(2)" class="switch-btn group relative px-8 py-10 rounded-3xl flex flex-col items-center justify-center gap-4 mx-auto w-48 transition-transform duration-300">
+          <div class="w-12 h-20 bg-neutral-800 rounded-xl p-1 border border-neutral-700/50 flex flex-col justify-between items-center shadow-inner">
+            <div class="w-10 h-8 rounded-lg bg-neutral-700 group-hover:bg-amber-400 transition-colors duration-300 shadow"></div>
+            <div class="w-2 h-2 rounded-full bg-amber-500/50"></div>
+          </div>
+          <span class="text-sm font-medium text-neutral-300 group-hover:text-amber-200 transition">thử bật công tắc đèn xem</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: BẤT NGỜ CHƯA / LỜI CHÀO -->
+    <div id="screen-2" class="screen flex-col justify-between h-full p-8 text-center z-10 bg-gradient-to-b from-amber-900/20 via-neutral-900 to-neutral-950">
+      
+      <!-- Top Decorative Bunting Flags -->
+      <div class="pt-6 flex justify-center gap-2 opacity-80">
+        <span class="text-2xl animate-bounce" style="animation-delay: 0.1s">🚩</span>
+        <span class="text-2xl animate-bounce" style="animation-delay: 0.2s">🎉</span>
+        <span class="text-2xl animate-bounce" style="animation-delay: 0.3s">✨</span>
+        <span class="text-2xl animate-bounce" style="animation-delay: 0.4s">🌸</span>
+      </div>
+
+      <div class="my-auto space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-semibold tracking-widest uppercase border border-amber-500/20">
+          BẤT NGỜ CHƯA!!
+        </span>
+        
+        <h1 class="text-3xl sm:text-4xl font-serif-custom font-medium tracking-wide text-amber-100 uppercase">
+          CHÚC MỪNG<br>SINH NHẬT
+        </h1>
+
+        <div class="py-2">
+          <h2 id="recipient-name-display-1" class="text-5xl font-handwriting text-rose-300 font-bold drop-shadow-md">
+            Anh
+          </h2>
+          <p id="age-display" class="text-neutral-400 text-sm mt-2 font-light">
+            tròn <span class="font-semibold text-amber-200">27</span> tuổi
+          </p>
+        </div>
+
+        <p class="text-xs text-neutral-400 font-serif-custom italic">
+          hôm nay là ngày của Anh 🎉
+        </p>
+      </div>
+
+      <div class="pb-6">
+        <button onclick="goToScreen(3)" class="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-rose-500 to-amber-500 text-white font-medium text-sm shadow-lg shadow-rose-500/25 hover:opacity-95 transition active:scale-98 flex items-center justify-center gap-2">
+          <span>tiếp nào</span>
+          <i class="fas fa-heart text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: BÁNH KEM & THỔI NẾN (Căn chỉnh chuẩn mặt bánh) -->
+    <div id="screen-3" class="screen flex-col justify-between h-full p-6 text-center z-10 bg-gradient-to-b from-neutral-900 via-rose-950/20 to-neutral-950">
+      
+      <div class="pt-6">
+        <h3 class="text-xs font-semibold tracking-widest text-amber-300/80 uppercase">Bữa Tiệc Ngọt Ngào</h3>
+        <p id="candle-instruction" class="text-sm font-serif-custom italic text-neutral-300 mt-1">
+          suyt.. nến đang được thắp 🔥
+        </p>
+      </div>
+
+      <!-- Cake Illustration Container -->
+      <div class="relative my-auto flex flex-col items-center justify-center">
+        
+        <!-- Cake Graphic -->
+        <div class="relative w-64 h-56 flex flex-col items-center justify-end">
+          
+          <!-- CANDLES GROUP - Positioned ON TOP of the cake top surface -->
+          <div id="candles-container" class="absolute top-[22px] z-30 flex items-end justify-center gap-6">
+            <!-- Candle 1 -->
+            <div class="candle-item relative flex flex-col items-center group cursor-pointer" onclick="toggleSingleCandle(0)">
+              <div id="flame-0" class="flame mb-1"></div>
+              <div class="w-3.5 h-12 rounded-t-sm bg-gradient-to-r from-rose-300 via-amber-200 to-rose-400 shadow-sm border-t border-white/40 flex items-center justify-center">
+                <span id="candle-num-1" class="text-[9px] font-bold text-rose-800">2</span>
+              </div>
+            </div>
+
+            <!-- Candle 2 -->
+            <div class="candle-item relative flex flex-col items-center group cursor-pointer" onclick="toggleSingleCandle(1)">
+              <div id="flame-1" class="flame mb-1"></div>
+              <div class="w-3.5 h-12 rounded-t-sm bg-gradient-to-r from-amber-200 via-rose-300 to-amber-300 shadow-sm border-t border-white/40 flex items-center justify-center">
+                <span id="candle-num-2" class="text-[9px] font-bold text-amber-900">7</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cake Layers -->
+          <!-- Top Layer -->
+          <div class="relative w-48 h-20 bg-gradient-to-b from-amber-100 to-amber-200 rounded-t-3xl shadow-md border-b-4 border-rose-300/60 overflow-hidden flex items-center justify-center">
+            <!-- Cream Drips -->
+            <div class="absolute top-0 w-full h-4 bg-white/90 rounded-b-xl shadow-sm"></div>
+            <!-- Large Age Text on Cake -->
+            <span id="cake-age-text" class="text-4xl font-serif-custom font-bold text-amber-800/25 tracking-widest mt-2">27</span>
+          </div>
+
+          <!-- Middle Cream Layer -->
+          <div class="w-56 h-12 bg-gradient-to-b from-rose-200 to-rose-300 rounded-t-lg shadow-md border-b-4 border-amber-200/60 flex justify-around items-center px-4">
+            <span class="text-rose-400">🍓</span>
+            <span class="text-rose-400">✨</span>
+            <span class="text-rose-400">🍓</span>
+            <span class="text-rose-400">✨</span>
+            <span class="text-rose-400">🍓</span>
+          </div>
+
+          <!-- Cake Plate Base -->
+          <div class="w-64 h-5 bg-gradient-to-r from-neutral-300 via-white to-neutral-300 rounded-full shadow-lg border-b-2 border-neutral-400"></div>
+        </div>
+
+      </div>
+
+      <!-- Action Button / Hold to Blow -->
+      <div class="pb-6 space-y-3">
+        <p id="candle-subtext" class="text-xs text-neutral-400 font-light">
+          Chạm vào nến hoặc giữ nút bên dưới để thổi nến nhé
+        </p>
+
+        <button id="blow-btn" 
+                onmousedown="startBlowing()" onmouseup="stopBlowing()" 
+                ontouchstart="startBlowing()" ontouchend="stopBlowing()"
+                class="w-full py-3.5 px-6 rounded-full bg-neutral-800 border border-neutral-700 text-amber-200 font-medium text-sm shadow-lg hover:bg-neutral-750 transition active:scale-98 flex items-center justify-center gap-2 select-none">
+          <i class="fas fa-wind text-amber-400"></i>
+          <span id="blow-btn-text">Nhấn giữ để thổi nến - từ từ thôi</span>
+        </button>
+
+        <button id="next-to-wish-btn" onclick="goToScreen(4)" class="hidden w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-amber-400 to-rose-500 text-white font-medium text-sm shadow-lg shadow-rose-500/25 hover:opacity-95 transition animate-pulse">
+          Tiếp tục nào ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: MÀN ƯỚC NGUYỆN (Giữ tay ước một điều) -->
+    <div id="screen-4" class="screen flex-col justify-between h-full p-8 text-center z-10 bg-neutral-950">
+      
+      <div class="pt-6 space-y-2">
+        <h3 class="text-xs font-semibold tracking-widest text-rose-400 uppercase">Khoảnh Khắc Linh Thiêng</h3>
+        <p class="text-base font-serif-custom italic text-amber-100">
+          giờ thì... ước một điều, nhắm mắt lại cứ từ từ
+        </p>
+      </div>
+
+      <!-- Interactive Glowing Heart -->
+      <div class="my-auto relative flex flex-col items-center justify-center">
+        <div id="pulse-ring-element" class="pulse-ring absolute w-48 h-48 rounded-full pointer-events-none"></div>
+        
+        <button id="wish-heart-btn"
+                onmousedown="startWishing()" onmouseup="stopWishing()"
+                ontouchstart="startWishing()" ontouchend="stopWishing()"
+                class="relative w-28 h-28 rounded-full bg-gradient-to-tr from-rose-600 to-rose-400 text-white flex items-center justify-center text-4xl shadow-xl heart-glow transition-transform duration-300 active:scale-95 cursor-pointer">
+          <i class="fas fa-heart text-white drop-shadow"></i>
+        </button>
+
+        <p id="wish-status-text" class="text-xs text-neutral-400 mt-8 font-light">
+          giữ tay trên màn hình trong lúc ước
+        </p>
+      </div>
+
+      <div class="pb-6">
+        <button id="wish-next-btn" onclick="goToScreen(5)" class="hidden w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-amber-400 to-rose-500 text-white font-medium text-sm shadow-lg shadow-rose-500/25 hover:opacity-95 transition">
+          Mong điều ước thành sự thật ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: BỨC THƯ CUỘN & POLAROID -->
+    <div id="screen-5" class="screen flex-col justify-between h-full p-6 text-center z-10 bg-neutral-900 overflow-y-auto">
+      
+      <div class="pt-4 mb-3">
+        <p class="text-xs text-rose-300 font-medium">còn một điều nữa, cái này từ Em ❤️</p>
+      </div>
+
+      <!-- Unrolling Paper Scroll -->
+      <div class="scroll-paper my-auto rounded-2xl p-6 text-neutral-800 text-left space-y-4 border border-amber-900/10">
+        
+        <!-- Polaroid Photo -->
+        <div class="bg-white p-3 rounded-lg shadow-md border border-neutral-200 rotate-[-1deg] hover:rotate-0 transition-transform">
+          <img id="polaroid-img-display" src="input_file_0.png" alt="Kỷ niệm" class="w-full h-64 object-cover object-center rounded shadow-inner">
+          <p class="text-center font-handwriting text-neutral-600 text-lg mt-2">Kỷ niệm ngọt ngào ❤️</p>
+        </div>
+
+        <!-- Handwritten Letter Text -->
+        <div class="space-y-2 pt-2">
+          <p id="letter-content-display" class="font-serif-custom text-sm leading-relaxed text-neutral-700 whitespace-pre-line">Have a wonderful birthday.
+I wish your every day to be filled with lots of love, laughter.
+happiness and the warmth of sunshine.</p>
+          <p id="sender-name-display" class="text-right font-handwriting text-xl text-rose-600 font-bold pt-2">
+            – Em, gửi Anh
+          </p>
+        </div>
+      </div>
+
+      <div class="py-4">
+        <button onclick="goToScreen(6)" class="w-full py-3.5 px-6 rounded-full bg-rose-500 text-white font-medium text-sm shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition">
+          tiếp ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 6: CON SỐ KỶ NIỆM (Mosaic Grid) -->
+    <div id="screen-6" class="screen flex-col justify-between h-full p-6 text-center z-10 bg-neutral-950">
+      
+      <div class="pt-6">
+        <h3 class="text-xs font-semibold tracking-widest text-amber-300 uppercase">Tập Hợp Khoảnh Khắc</h3>
+      </div>
+
+      <!-- Photo Mosaic Number Graphic -->
+      <div class="my-auto flex flex-col items-center justify-center space-y-6">
+        <div class="flex gap-4 justify-center items-center">
+          <!-- Digit 2 Grid -->
+          <div id="mosaic-digit-1" class="mosaic-num"></div>
+          <!-- Digit 7 Grid -->
+          <div id="mosaic-digit-2" class="mosaic-num"></div>
+        </div>
+
+        <p class="text-xs text-neutral-400 font-serif-custom italic px-4">
+          những khoảnh khắc này, giờ là của Anh rồi.
+        </p>
+      </div>
+
+      <div class="pb-6">
+        <button onclick="goToScreen(7)" class="w-full py-3.5 px-6 rounded-full bg-amber-500 text-neutral-950 font-semibold text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition">
+          điều cuối cùng ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 7: TẤM VÉ ƯỚC NGUYỆN & TẢI ẢNH POLAROID -->
+    <div id="screen-7" class="screen flex-col justify-between h-full p-6 text-center z-10 bg-neutral-900 overflow-y-auto">
+      
+      <div class="pt-4">
+        <span class="text-xs font-bold tracking-widest text-amber-300 uppercase">✨ TIỆC BẤT NGỜ ✨</span>
+      </div>
+
+      <!-- Interactive Ticket / Polaroid Download Card -->
+      <div id="download-card-target" class="my-auto bg-stone-100 text-neutral-800 rounded-2xl p-6 shadow-2xl border border-stone-200 text-left space-y-4">
+        
+        <div class="flex justify-between items-start border-b border-stone-300/80 pb-3">
+          <div>
+            <h4 id="recipient-card-name" class="text-2xl font-handwriting font-bold text-neutral-800">Anh</h4>
+            <p id="card-dob-display" class="text-xs text-neutral-500 font-serif-custom">chính thức 27 tuổi - 25 tháng 8, 1999</p>
+          </div>
+          <span class="text-xs px-2.5 py-1 rounded-full bg-rose-100 text-rose-600 font-medium">chính thức bước sang tuổi mới 🎂</span>
+        </div>
+
+        <p class="text-xs text-neutral-500 italic">
+          được chúc mừng bởi <span id="card-sender-display" class="font-semibold text-neutral-700">Em 🩵</span>
+        </p>
+
+        <!-- User Wish Input Box -->
+        <div class="bg-stone-200/70 rounded-xl p-3 border border-stone-300 space-y-2">
+          <label class="block text-[11px] font-semibold text-stone-600">
+            tới lượt Anh - viết điều ước cho năm tới nhé ✍️
+          </label>
+          <textarea id="user-custom-wish" rows="3" 
+                    placeholder="Have a wonderful birthday. I wish your every day to be filled with lots of love, laughter, happiness and the warmth of sunshine."
+                    class="w-full p-2.5 text-xs bg-white rounded-lg border border-stone-300 focus:outline-none focus:ring-1 focus:ring-rose-400 text-neutral-800 placeholder-neutral-400 resize-none">Have a wonderful birthday. I wish your every day to be filled with lots of love, laughter, happiness and the warmth of sunshine.</textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pb-4 space-y-2.5">
+        <button onclick="downloadPolaroidCard()" class="w-full py-3.5 px-6 rounded-full bg-amber-500 text-neutral-950 font-semibold text-sm shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition flex items-center justify-center gap-2">
+          <i class="fas fa-download"></i>
+          <span>giữ lại tấm này ✨</span>
+        </button>
+
+        <button onclick="goToScreen(2)" class="w-full py-3 px-6 rounded-full bg-neutral-800 text-neutral-300 font-medium text-xs hover:bg-neutral-700 transition flex items-center justify-center gap-2 border border-neutral-700">
+          <i class="fas fa-redo text-xs"></i>
+          <span>xem lại bữa tiệc 🎈</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* Global Application State */
+    const state = {
+      recipientName: "Anh",
+      dob: "25/08/1999",
+      age: 27,
+      senderName: "Em",
+      photoUrl: "input_file_0.png",
+      letterText: "Have a wonderful birthday.\nI wish your every day to be filled with lots of love, laughter.\nhappiness and the warmth of sunshine.",
+      candlesLit: [true, true],
+      isPlayingMusic: false,
+      audioCtx: null
+    };
+
+    /* Background Music Generator using Web Audio API (Happy Birthday Melody) */
+    function playSyntheticMusic() {
+      if (!state.audioCtx) {
+        state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      
+      const notes = [
+        {f: 261.63, d: 0.3}, {f: 261.63, d: 0.3}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 349.23, d: 0.6}, {f: 329.63, d: 1.0},
+        {f: 261.63, d: 0.3}, {f: 261.63, d: 0.3}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 392.00, d: 0.6}, {f: 349.23, d: 1.0}
+      ];
+
+      let time = state.audioCtx.currentTime;
+      notes.forEach(note => {
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(note.f, time);
+        gain.gain.setValueAtTime(0.08, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + note.d);
+        osc.connect(gain);
+        gain.connect(state.audioCtx.destination);
+        osc.start(time);
+        osc.stop(time + note.d);
+        time += note.d + 0.05;
+      });
+    }
+
+    function toggleMusic() {
+      state.isPlayingMusic = !state.isPlayingMusic;
+      const musicBtn = document.getElementById('music-icon');
+      if (state.isPlayingMusic) {
+        musicBtn.className = "fas fa-volume-up text-amber-300";
+        playSyntheticMusic();
+      } else {
+        musicBtn.className = "fas fa-music text-sm";
+      }
+    }
+
+    /* Screen Navigation */
+    function goToScreen(screenNum) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`screen-${screenNum}`);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      if (screenNum === 3) {
+        resetCandles();
+      } else if (screenNum === 6) {
+        generateMosaicNumbers();
+      }
+    }
+
+    /* Candle Blowing Controls */
+    function toggleSingleCandle(index) {
+      state.candlesLit[index] = !state.candlesLit[index];
+      updateCandleUI();
+    }
+
+    function updateCandleUI() {
+      state.candlesLit.forEach((isLit, i) => {
+        const flame = document.getElementById(`flame-${i}`);
+        if (flame) {
+          flame.style.display = isLit ? 'block' : 'none';
+        }
+      });
+
+      const litCount = state.candlesLit.filter(Boolean).length;
+      const instruction = document.getElementById('candle-instruction');
+      const nextBtn = document.getElementById('next-to-wish-btn');
+      const blowBtn = document.getElementById('blow-btn');
+
+      if (litCount === 0) {
+        instruction.innerText = "đã tắt ngọn nến! 🎉";
+        blowBtn.classList.add('hidden');
+        nextBtn.classList.remove('hidden');
+        
+        // Trigger celebratory confetti
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } else {
+        instruction.innerText = `suyt.. nến đang được thắp 🔥 (${litCount}/2)`;
+      }
+    }
+
+    function resetCandles() {
+      state.candlesLit = [true, true];
+      document.getElementById('blow-btn').classList.remove('hidden');
+      document.getElementById('next-to-wish-btn').classList.add('hidden');
+      updateCandleUI();
+    }
+
+    let blowTimer = null;
+    function startBlowing() {
+      document.getElementById('blow-btn-text').innerText = "Cố lên... đừng buông tay 🕯️";
+      blowTimer = setTimeout(() => {
+        state.candlesLit = [false, false];
+        updateCandleUI();
+      }, 1200);
+    }
+
+    function stopBlowing() {
+      clearTimeout(blowTimer);
+      if (state.candlesLit.some(Boolean)) {
+        document.getElementById('blow-btn-text').innerText = "Nhấn giữ để thổi nến - từ từ thôi";
+      }
+    }
+
+    /* Wish Screen Heart Hold */
+    let wishTimer = null;
+    function startWishing() {
+      document.getElementById('wish-status-text').innerText = "Đang gửi điều ước của Cậu tới các vì sao... ✨";
+      document.getElementById('wish-status-text').classList.add('text-amber-300');
+      
+      wishTimer = setTimeout(() => {
+        document.getElementById('wish-status-text').innerText = "Điều ước đã được gửi đi thành công! ❤️";
+        document.getElementById('wish-next-btn').classList.remove('hidden');
+        document.getElementById('wish-heart-btn').classList.add('scale-110');
+      }, 1500);
+    }
+
+    function stopWishing() {
+      clearTimeout(wishTimer);
+    }
+
+    /* Mosaic Photo Numbers Generation */
+    function generateMosaicNumbers() {
+      const samplePhotos = [
+        'input_file_0.png',
+        'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=100&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=100&auto=format&fit=crop'
+      ];
+
+      const grid1 = document.getElementById('mosaic-digit-1');
+      const grid2 = document.getElementById('mosaic-digit-2');
+      grid1.innerHTML = '';
+      grid2.innerHTML = '';
+
+      for (let i = 0; i < 24; i++) {
+        const tile1 = document.createElement('div');
+        tile1.className = 'mosaic-tile';
+        tile1.style.backgroundImage = `url(${samplePhotos[i % samplePhotos.length]})`;
+        grid1.appendChild(tile1);
+
+        const tile2 = document.createElement('div');
+        tile2.className = 'mosaic-tile';
+        tile2.style.backgroundImage = `url(${samplePhotos[(i + 1) % samplePhotos.length]})`;
+        grid2.appendChild(tile2);
+      }
+    }
+
+    /* Download Polaroid Card */
+    function downloadPolaroidCard() {
+      const cardElement = document.getElementById('download-card-target');
+      html2canvas(cardElement, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `ChucMungSinhNhat_${state.recipientName}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    /* Floating Particles Background */
+    function initParticles() {
+      const container = document.getElementById('particle-container');
+      const symbols = ['✨', '🌸', '💖', '🎈'];
+      for (let i = 0; i < 15; i++) {
+        const p = document.createElement('span');
+        p.className = 'particle text-xs';
+        p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.animationDuration = `${4 + Math.random() * 6}s`;
+        p.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(p);
+      }
+    }
+
+    window.onload = function() {
+      initParticles();
+    };
+  </script>
+</body>
+</html>
